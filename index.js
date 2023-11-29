@@ -70,15 +70,24 @@ app.patch("/posts/:id",(req,res)=>{
   const id  = parseInt(req.params.id);
 
   const searchPost = posts.find((post)=> post.id === id);
+  if(!searchPost) return res.status(404).json({message : "Cannot found post"});
 
-  const updatedPost = {
-    id : id,
-    title : req.body.title || searchPost.title,
-    content : req.body.content || searchPost.content,
-    author : req.body.author || searchPost.author,
+  if(req.body.title) searchPost.title = req.body.title;
+  if(req.body.content) searchPost.content = req.body.content;
+  if(req.body.author) searchPost.author = req.body.author;
+
+  res.json(searchPost);
+});
+
+app.delete("/posts/:id",(req,res)=>{
+  const findPost = posts.findIndex((post)=> post.id === parseInt(req.params.id));
+
+  if(findPost === -1){
+    return res.status(404).json({message: "Post not found" })
   }
 
-  res.json(updatedPost);
+  posts.splice(findPost,1);
+  res.json({message : "Successfully deleted"});
 });
 //CHALLENGE 2: GET a specific post by id
 
