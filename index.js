@@ -46,7 +46,7 @@ app.get("/posts",(req,res)=>{
 });
 
 app.get("/posts/:id",(req,res)=>{
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const searchPost = posts.find((post)=> post.id === id);
   res.json(searchPost);
 })
@@ -65,6 +65,21 @@ app.post("/posts",(req,res)=>{
   res.json(newPost);
 })
 
+
+app.patch("/posts/:id",(req,res)=>{
+  const id  = parseInt(req.params.id);
+
+  const searchPost = posts.find((post)=> post.id === id);
+
+  const updatedPost = {
+    id : id,
+    title : req.body.title || searchPost.title,
+    content : req.body.content || searchPost.content,
+    author : req.body.author || searchPost.author,
+  }
+
+  res.json(updatedPost);
+});
 //CHALLENGE 2: GET a specific post by id
 
 //CHALLENGE 3: POST a new post
